@@ -1,0 +1,32 @@
+# Use this configuration file to create a DaemonSet that disables the root squash restriction for NFS file shares that are mounted to cluster pods in IBM Cloud Kubernetes Service.
+# Note that the pods run in privileged mode, which can pose a security risk. Use with caution.
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: daemonset
+  labels:
+    tier: management
+    app: daemonset
+spec:
+  selector:
+    matchLabels:
+      name: daemonset
+  template:
+    metadata:
+      labels:
+        name: daemonset
+    spec:
+      containers:
+        - resources:
+            requests:
+              cpu: 0.1
+          securityContext:
+            privileged: true
+          image: ubuntu:16.04
+          name: unrootsquash
+          command: ["/bin/sh", "-c"]
+          args:
+            - >
+              while true; do
+                sleep 100000;
+              done
